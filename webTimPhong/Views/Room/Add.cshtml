@@ -1,0 +1,277 @@
+﻿@model webTimPhong.Models.EF.ROOM
+
+@{
+    ViewBag.Title = "Them phong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA3KXzYW685fcx3GFkyENrkzd0PU45hDk&libraries=places&language=vi&callback=initialize"></script>
+<!-- Main content -->
+<section class="content">
+    <style>
+        .resizable-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+            padding: 10px;
+            max-width: 1000px; /* Đặt giới hạn chiều ngang tối đa cho khung */
+        }
+    </style>
+    <!-- Default box -->
+    <h3 class="card-title">Đăng thông tin phòng</h3>
+    <div class="resizable-box">
+
+        <div class="card-body1">
+            @using (Html.BeginForm("Add", "ROOM", FormMethod.Post, new { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.UserID)
+                <div class="form-group">
+                    <label class="form-label" for="Title">Tiêu đề</label>
+                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Tiêu đề" })
+                    @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="RoomCategoryId">Loại phòng</label>
+                    @Html.DropDownListFor(x => x.RoomCategoryId, ViewBag.RoomCategory as SelectList, "- Chọn loại phòng -", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.RoomCategoryId, null, new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="Description" width="100px">Thông tin chi tiết</label>
+                    @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả" })
+                    @Html.ValidationMessageFor(x => x.Description, null, new { @class = "text-danger" })
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="form-label" for="RoomNumber">Số lượng phòng</label>
+                            @Html.TextBoxFor(x => x.RoomNumber, new { @class = "form-control", @Value = "1" })
+                            @Html.ValidationMessageFor(x => x.RoomNumber, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="Price">Giá</label>
+                            @Html.TextBoxFor(x => x.Price, new { @class = "form-control", @placeholder = "Triệu/tháng" })
+                            @Html.ValidationMessageFor(x => x.Price, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="Acreage">Diện tích</label>
+                            @Html.TextBoxFor(x => x.Acreage, new { @class = "form-control", @placeholder = "m2" })
+                            @Html.ValidationMessageFor(x => x.Acreage, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="form-label" for="Title">Địa chỉ</label>
+                            @Html.TextBoxFor(x => x.Address, new { @class = "form-control", @placeholder = "Địa chỉ" })
+                            @Html.ValidationMessageFor(x => x.Address, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="RoomNumber">Thành phố</label>
+                            @Html.DropDownListFor(x => x.CityId, ViewBag.CITY as SelectList, "- Chọn thành phố -", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.CityId, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="Price">Quận,huyện</label>
+                            @Html.DropDownListFor(x => x.DistrictId, ViewBag.DISTRIC as SelectList, "- Chọn quận huyện -", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.DistrictId, null, new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="Acreage">Phường</label>
+                            @Html.DropDownListFor(x => x.WardId, ViewBag.WARD as SelectList, "- Chọn phường -", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.WardId, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane active" id="activity">
+                    <!-- Content of the "activity" tab pane -->
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <input type="button" class="btn btn-primary" id="iTaiAnh" onclick="BrowseServer();" value="Tải ảnh" />
+                    </div>
+                    <div class="resizable-box">
+                        <div class="col-md-12">
+                            <table class="table table-hover" id="tbAnhSanPham">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Ảnh</th>
+                                        <th class="text-center">Ảnh đại diện</th>
+                                        <th class="text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbHtml">
+                                </tbody>
+                            </table>
+                            <input type="hidden" id="tCurrentId" value="0" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- google map-->
+                <div class="form-group row">
+                    <div class="col-lg-12">
+                        <div class="ibox-content">
+                            <h2>Google Map</h2>
+                            <div class="input-group m-b" width="90%" height="90%">
+                                <span class="input-group-addon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </span>
+                                <input asp-for="Address" id="searchTextField" type="text" class="form-control" />
+                                <input asp-for="Latitude" type="hidden" id="placeLat" />
+                                <input asp-for="Longtitude" type="hidden" id="placeLng" />
+                            </div>
+
+                            <div id="map" style="height: 500px;"></div>
+                            <div id="infowindow-content">
+                                <span id="place-name" class="title"></span><br>
+                                <span id="place-address"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Đăng tin" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- /.card -->
+   
+
+</section>
+<!-- /.content -->
+@section  scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnXoaAnh', function () {
+                var conf = confirm('Bạn có muốn xóa ảnh này không?');
+                if (conf === true) {
+                    var _id = $(this).data('id');
+                    $('#trow_' + _id).fadeTo('fast', 0.5, function () {
+                        $(this).slideUp('fast', function () { $(this).remove(); });
+                    });
+                    var temp = $('#tCurrentId').val();
+                    var currentId = parseInt(temp) - 1;
+                    $('#tCurrentId').val(currentId);
+                }
+            });
+        });
+        function BrowseServer(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                addImageProduct(fileUrl);
+            };
+            finder.popup();
+        }
+        function addImageProduct(url) {
+            var temp = $('#tCurrentId').val();
+            var currentId = parseInt(temp) + 1;
+            var str = "";
+            if (currentId == 1) {
+                str += `<tr id="trow_${currentId}">
+                                                <td class="text-center">${currentId}</td>
+                                                <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                                <td class="text-center"><input type="radio" name="rDefault" value="${currentId}" checked="checked"/></td>
+                                                <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                                </tr>`;
+            }
+            else {
+                str += `<tr id="trow_${currentId}">
+                                                <td class="text-center">${currentId}</td>
+                                                <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                                <td class="text-center"><input type="radio" name="rDefault" value="${currentId}"/></td>
+                                                <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                                </tr>`;
+            }
+            $('#tbHtml').append(str);
+            $('#tCurrentId').val(currentId);
+        }
+
+    </script>
+    <script>
+        // Initialize and add the map
+        function initialize() {
+            var loca = { lat: 16.0738064, lng: 108.1477255 };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 16, center: loca });
+            // The marker, positioned at Uluru
+            //var marker = new google.maps.Marker({ position: loca, map: map });
+
+            var input = document.getElementById('searchTextField');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.bindTo('bounds', map);
+
+            // Set the data fields to return when the user selects a place.
+            autocomplete.setFields(
+                ['address_components', 'geometry', 'icon', 'name']);
+
+            var infowindow = new google.maps.InfoWindow();
+            var infowindowContent = document.getElementById('infowindow-content');
+            infowindow.setContent(infowindowContent);
+            var marker = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+
+            autocomplete.addListener('place_changed', function () {
+                infowindow.close();
+                marker.setVisible(false);
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                    document.getElementById('placeLat').value = place.geometry.location.lat();
+                    document.getElementById('placeLng').value = place.geometry.location.lng();
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // Why 17? Because it looks good.
+                }
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                //infowindowContent.children['place-icon'].src = place.icon;
+                infowindowContent.children['place-name'].textContent = place.name;
+                infowindowContent.children['place-address'].textContent = address;
+                infowindow.open(map, marker);
+            });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+}

@@ -1,0 +1,68 @@
+﻿@model webTimPhong.Models.EF.FAQ
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Chi tiết liên </h1>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div>
+    <hr />
+    <div class="container FAQ_section_container">
+        @if (Model != null)
+        {
+            <div class="row">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <div class="col-md-12">
+                    @Html.DisplayFor(Model => Model.Email)
+                </div>
+            </div>
+            <div class="row">
+                <dt>
+                    @Html.DisplayNameFor(model => model.HoTen)
+                </dt>
+                <div class="col-md-12">
+                    @Html.DisplayFor(Model => Model.HoTen)
+                </div>
+            </div>
+            <div class="row">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <div class="col-md-12">
+                    @Html.DisplayFor(Model => Model.Phone)
+                </div>
+            </div>
+            <div class="row" width="100px">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Question)
+                </dt>
+                <div class="col-md-12">
+                    @Html.Raw(Model.Question)
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Trở về", "Index")
+</p>

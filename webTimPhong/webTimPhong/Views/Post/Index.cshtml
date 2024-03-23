@@ -1,0 +1,114 @@
+﻿@model webTimPhong.Models.EF.ROOMDetail
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Bai viet</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Tiêu đề </label>
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Giá phòng </label>
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Diện tích</label>
+                @Html.EditorFor(model => model.Acreage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acreage, "", new { @class = "text-danger" })
+            
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Số phòng</label>>
+                @Html.EditorFor(model => model.RoomNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RoomNumber, "", new { @class = "text-danger" })
+            
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Mô tả </label>
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+          
+        </div>
+
+
+        <div class=" row">
+        <div class="form-group">
+            @Html.LabelFor(model => model.HasPrivateWC, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.HasPrivateWC)
+                    @Html.ValidationMessageFor(model => model.HasPrivateWC, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HasMezzanine, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.HasMezzanine)
+                    @Html.ValidationMessageFor(model => model.HasMezzanine, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllowCook, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.AllowCook)
+                    @Html.ValidationMessageFor(model => model.AllowCook, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+            </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Giá nước</label>
+                @Html.EditorFor(model => model.WaterPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.WaterPrice, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Giá điện</label>
+                @Html.EditorFor(model => model.ElectronicPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ElectronicPrice, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Giá wifi </label>
+            @Html.EditorFor(model => model.WifiPrice, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.WifiPrice, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -1,0 +1,58 @@
+﻿@model webTimPhong.Models.EF.FAQ
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Liên Hệ</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Thông tin liên hệ</h2>
+        <div class="number-phone my-2">
+            Số điện thoại: 0961874429
+        </div>
+        <div class="email my-2">
+            Email: hoanganhv123@gmail.com
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class=" row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail">Họ tên</label>
+                @Html.TextBoxFor(model => model.HoTen, new { @class = "form-control", @placeholder = "Họ tên" })
+                @Html.ValidationMessageFor(model => model.HoTen, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail">Điện Thoại</label>
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @placeholder = "Điện Thoại" })
+                @Html.ValidationMessageFor(model => model.Phone, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail">Email</label>
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Nhập Email" })
+                @Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Yêu cầu</label>
+                @Html.TextAreaFor(model => model.Question, new { @class = "form-control", @placeholder = "" })
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Gửi" class="btn btn-outline-dark text-sm" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.0644094778913!2d106.71932257490714!3d10.729515689416475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f89959156c9%3A0x2c5cc1c9a9470997!2zVMOyYSBuaMOgIFBhcmFnb24!5e0!3m2!1svi!2s!4v1686453335339!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+}

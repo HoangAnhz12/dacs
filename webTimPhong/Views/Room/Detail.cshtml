@@ -1,0 +1,127 @@
+﻿@model webTimPhong.Models.EF.ROOM
+@{
+    ViewBag.Title = "Chi Tiết";
+}
+@section scripts{
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA3KXzYW685fcx3GFkyENrkzd0PU45hDk&libraries=places&language=vi&callback=initMap"></script>
+    <script src="~/Content/assets/js/single_custom.js"></script>
+}
+<style>
+    .resizable-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #000;
+        padding: 10px;
+        max-width: 1000px;
+        max-height: 200px; /* Đặt giới hạn chiều ngang tối đa cho khung */
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+@if (Model != null)
+{
+    <div class="container single_product_container">
+        <div class="row">
+            <div class="col">
+                <div class="breadcrumbs d-flex flex-row align-items-center">
+                    <ul>
+                        <li><a href="/">Home</a>
+                        <li>
+                        <li><a href="/danh-muc-san-pham/@Model.RoomCategory.Alias-@Model.RoomCategoryId"><i class="fa fa-angle-right" aria--hidden="true"></i>@Model.RoomCategory.Title</a>
+                        <li>
+                        <li class="active"><a href="#"><i class="fa fa-angle-right" aria--hidden="true"></i>@Model.Title</a>
+                        <li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                @if (Model.PICTUREs != null && Model.PICTUREs.Any())
+                {
+                    <div class="single_product_pics">
+                        <div class="row">
+                            <div class="col-lg-3 thumbnals_col order-lg-1 order-2">
+                                <div class="single_product_thumbnails">
+                                    <ul>
+                                        @foreach (var item in Model.PICTUREs)
+                                        {
+                                            if (item.IsActive)
+                                            {
+                                                <li class="active"><img src="@item.Image" alt="" data-image="@item.Image" width="100%" height="100%"></li>
+                                            }
+                                            else
+                                            {
+                                                <li><img src="@item.Image" alt="" data-image="@item.Image" width="100%px" height="100%px"></li>
+                                            }
+
+                                        }
+                                        @*<li><img src="images/single_1_thumb.jpg" alt="" data-image="images/single_1.jpg"></li>
+                                            <li class="active"><img src="images/single_2_thumb.jpg" alt="" data-image="images/single_2.jpg"></li>
+                                            <li><img src="images/single_3_thumb.jpg" alt="" data-image="images/single_3.jpg"></li>*@
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-9 image_col order-lg-2 oder-1">
+                                <div class="single_product_image">
+                                    <div class="single_product_image_background" style="background-image:url(@Model.PICTUREs.FirstOrDefault(x=>x.IsActive).Image"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="col-lg-5">
+                <div class="product_details">
+                    <div class="product_details_title">
+                        <h2> @Model.Title</h2>
+                        <p>Diện tích: @Model.Acreage m2</p>
+                        <p>Giá: @Model.Price Triệu/tháng</p>
+                        <p>Địa chỉ: @Model.Address,phường @Model.WARD.WardName, quận @Model.DISTRICT.DistrictName,@Model.CITY.CityName</p>
+                        <p>Liên hệ:</p>
+                        <p>Mô tả chi tiết:</p>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="resizable-box">
+        <p>
+            Nấu thấy dấu hiệu của lửa đảo hoặc không đúng với sự thật hay liên hệ với chúng tôi.
+            <a href="/FAQ/index" class="btn btn-outline-dark">Tại đây</a>
+        </p>
+    </div>
+
+    <div class="property-news-single-card style-two border-bottom-yellow">
+        <div class="content-title mb-3 h4">Bản đồ</div>
+        <p class="font-italic">(Vị trí trên bản đồ chỉ mang tính chất tương đối, chưa phải vị trí chính xác)</p>
+        <input type="hidden" id="lat" value="@Model.Latitude" />
+        <input type="hidden" id="longt" value="@Model.Longtitude" />
+        <div id="map" style="height: 500px; border-radius:8px"></div>
+    </div>
+
+    //  @Html.Partial("Map")
+
+}
+<script>
+    // Initialize and add the map
+    function initMap() {
+        // The location of real esate
+        var latitude = document.getElementById('lat').value;
+        var longtitude = document.getElementById('longt').value;
+        var loca = { lat: Number(latitude), lng: Number(longtitude) };
+        // The map, centered at real estate
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 17, center: loca });
+        // The marker
+        var marker = new google.maps.Marker({ position: loca, map: map });
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+</script>
+
